@@ -1,6 +1,6 @@
 name: tree_view_flutter
 description: "Tree View"
-version: 0.0.1
+version: 1.0.2
 repository: https://github.com/NamTranDinh/tree_view_flutter
 
 environment:
@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  equatable: any
-  flutter_bloc: any
+  equatable: ^2.0.7
+  flutter_bloc: ^9.1.0
 
 dev_dependencies:
   flutter_test:
