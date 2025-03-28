@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tree_view_flutter/models/tree_node.dart';
-import 'package:tree_view_flutter/viewmodel/permission_cubit.dart';
+import 'package:selection_tree_view/models/tree_node.dart';
+import 'package:selection_tree_view/viewmodel/permission_cubit.dart';
 
 class ListPermission extends StatefulWidget {
   const ListPermission({super.key});

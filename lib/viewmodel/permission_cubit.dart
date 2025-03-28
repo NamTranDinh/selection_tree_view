@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tree_view_flutter/models/permission_model.dart';
-import 'package:tree_view_flutter/models/tree_node.dart';
+import 'package:selection_tree_view/models/permission_model.dart';
+import 'package:selection_tree_view/models/tree_node.dart';
 
 part 'permission_state.dart';
 

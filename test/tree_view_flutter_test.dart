@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:tree_view_flutter/selection_tree_view.dart';
+import 'package:selection_tree_view/selection_tree_view.dart';
 
 void main() {
   test('adds one to input values', () {
