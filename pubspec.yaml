@@ -1,7 +1,7 @@
 name: tree_view_flutter
 description: "Tree View"
 version: 0.0.1
-#repository: https://github.com/gpmndev/recursive_tree_flutter
+repository: https://github.com/NamTranDinh/tree_view_flutter
 
 environment:
   sdk: ^3.5.0
