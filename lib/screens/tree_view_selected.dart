@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PermissionSelected extends StatefulWidget {
-  const PermissionSelected({super.key});
+class TreeViewSelected extends StatefulWidget {
+  const TreeViewSelected({super.key});
 
   @override
-  State<PermissionSelected> createState() => _PermissionSelectedState();
+  State<TreeViewSelected> createState() => _TreeViewSelectedState();
 }
 
-class _PermissionSelectedState extends State<PermissionSelected> {
+class _TreeViewSelectedState extends State<TreeViewSelected> {
   @override
   Widget build(BuildContext context) {
     return Container(

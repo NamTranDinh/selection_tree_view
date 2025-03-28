@@ -1,38 +1,47 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:selection_tree_view/models/permission_model.dart';
+import 'package:selection_tree_view/models/tree_decoration.dart';
 import 'package:selection_tree_view/models/tree_node.dart';
 
-part 'permission_state.dart';
+part 'tree_view_state.dart';
 
-class PermissionCubit extends Cubit<PermissionState> {
-  PermissionCubit() : super(PermissionState.init());
+class TreeViewCubit extends Cubit<TreeViewState> {
+  TreeViewCubit() : super(TreeViewState.init());
 
-  Future<void> getPermissions() async {
-    emit(state.copyWith(status: NetworkProcess.loading));
-    await Future<void>.delayed(const Duration(milliseconds: 1500));
-    final listPermission = PermissionModel.fakeData();
+  Future<void> initRootNodes({
+    List<TreeNode>? rootNodes,
+    TreeDecoration? decoration,
+  }) async {
+    // fake data for demo
+    if (rootNodes == null) {
+      final listPermission = PermissionModel.fakeData();
+      final data = mapToTreeNodes(listPermission);
+      // init decoration for fake data
+      if (decoration != null) setDecoration(decoration, data);
 
-    final data = mapToTreeNodes(listPermission);
-
-    emit(state.copyWith(status: NetworkProcess.success, rootNodes: data));
+      emit(state.copyWith(rootNodes: data));
+    } else {
+      if (decoration != null) setDecoration(decoration, rootNodes);
+      emit(
+        state.copyWith(
+          rootNodes: rootNodes,
+        ),
+      );
+    }
   }
 
-  Map<String, List<PermissionModel>> groupPermissionsByPath(
-    List<PermissionModel> permissions,
-  ) {
-    final groupedPermissions = <String, List<PermissionModel>>{};
-
-    for (final permission in permissions) {
-      final hierarchy = permission.path?.split(r'\\');
-      for (var i = 0; i < (hierarchy?.length ?? 0); i++) {
-        final pathKey = permission.path?.split(r'\\')[i].trim();
-        if (pathKey != null && pathKey.isNotEmpty) {
-          groupedPermissions.putIfAbsent(pathKey, () => []).add(permission);
-        }
-      }
+  void setDecoration(TreeDecoration decoration, List<TreeNode> rootNodes) {
+    for (final e in rootNodes) {
+      e.decoration = e.decoration.copyWith(
+        nodeHeight: decoration.nodeHeight,
+        // status: decoration.status,
+        // isShowChild: decoration.isShowChild,
+        titleStyle: decoration.titleStyle,
+        prefixIcon: decoration.prefixIcon,
+        animatedDuration: decoration.animatedDuration,
+      );
+      setDecoration(decoration, e.children);
     }
-
-    return groupedPermissions;
   }
 
   List<TreeNode> mapToTreeNodes(List<PermissionModel> permissions) {
@@ -136,5 +145,19 @@ class PermissionCubit extends Cubit<PermissionState> {
     }
 
     emit(state.copyWith(rootNodes: state.rootNodes));
+  }
+
+  void toggleNode(TreeNode node) {
+    final status = node.decoration.status = !node.decoration.status;
+    findChildren(node, status);
+    emit(state.copyWith(rootNodes: state.rootNodes));
+  }
+
+  void findChildren(TreeNode node, bool status) {
+    for (final child in node.children) {
+      child.decoration.isShowChild = status;
+      child.decoration.status = status;
+      findChildren(child, status);
+    }
   }
 }

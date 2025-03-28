@@ -1,3 +1,5 @@
+// Mock class
+
 class PermissionModel {
   PermissionModel({
     this.id,
