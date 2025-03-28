@@ -1,7 +1,7 @@
-name: tree_view_flutter
+name: selection_tree_view
 description: "Tree View"
-version: 1.0.3
-repository: https://github.com/NamTranDinh/tree_view_flutter
+version: 1.0.2
+repository: https://github.com/NamTranDinh/selection_tree_view
 
 environment:
   sdk: ^3.5.0

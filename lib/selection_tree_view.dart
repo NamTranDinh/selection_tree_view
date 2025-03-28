@@ -1,4 +1,4 @@
-library tree_view_flutter;
+library selection_tree_view;
 
 /// A Calculator.
 class Calculator {
