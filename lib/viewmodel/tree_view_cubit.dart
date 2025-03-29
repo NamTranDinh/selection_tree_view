@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:selection_tree_view/models/permission_model.dart';
-import 'package:selection_tree_view/models/tree_decoration.dart';
+import 'package:selection_tree_view/models/mock_data_model.dart';
+import 'package:selection_tree_view/models/tree_configuration.dart';
 import 'package:selection_tree_view/models/tree_node.dart';
 
 part 'tree_view_state.dart';
@@ -9,42 +9,32 @@ class TreeViewCubit extends Cubit<TreeViewState> {
   TreeViewCubit() : super(TreeViewState.init());
 
   Future<void> initRootNodes({
-    List<TreeNode>? rootNodes,
-    TreeDecoration? decoration,
+    required List<TreeNode> rootNodes,
+    TreeConfiguration? treeConfiguration,
   }) async {
-    // fake data for demo
-    if (rootNodes == null) {
-      final listPermission = PermissionModel.fakeData();
-      final data = mapToTreeNodes(listPermission);
-      // init decoration for fake data
-      if (decoration != null) setDecoration(decoration, data);
-
-      emit(state.copyWith(rootNodes: data));
-    } else {
-      if (decoration != null) setDecoration(decoration, rootNodes);
-      emit(
-        state.copyWith(
-          rootNodes: rootNodes,
-        ),
-      );
-    }
+    if (treeConfiguration != null) setDecoration(treeConfiguration, rootNodes);
+    emit(state.copyWith(rootNodes: rootNodes));
   }
 
-  void setDecoration(TreeDecoration decoration, List<TreeNode> rootNodes) {
+  void setDecoration(
+    TreeConfiguration treeConfiguration,
+    List<TreeNode> rootNodes,
+  ) {
     for (final e in rootNodes) {
-      e.decoration = e.decoration.copyWith(
-        nodeHeight: decoration.nodeHeight,
-        // status: decoration.status,
-        // isShowChild: decoration.isShowChild,
-        titleStyle: decoration.titleStyle,
-        prefixIcon: decoration.prefixIcon,
-        animatedDuration: decoration.animatedDuration,
+      e.treeConfiguration = e.treeConfiguration.copyWith(
+        nodeHeight: treeConfiguration.nodeHeight,
+        titleStyle: treeConfiguration.titleStyle,
+        prefixIcon: treeConfiguration.prefixIcon,
+        animatedDuration: treeConfiguration.animatedDuration,
+        animatePrefixIcon: treeConfiguration.animatePrefixIcon,
+        showCheckbox: treeConfiguration.showCheckbox,
       );
-      setDecoration(decoration, e.children);
+      setDecoration(treeConfiguration, e.children);
     }
   }
 
-  List<TreeNode> mapToTreeNodes(List<PermissionModel> permissions) {
+  // test
+  List<TreeNode> mapToTreeNodes(List<MockDataModel> permissions) {
     final nodesMap = <String, TreeNode>{};
     final rootNodes = <TreeNode>[];
 
@@ -131,14 +121,18 @@ class TreeViewCubit extends Cubit<TreeViewState> {
     emit(state.copyWith(rootNodes: state.rootNodes));
   }
 
-  void onSelectParentNode(TreeNode node, {bool? parentStatus}) {
-    node.isCheck = parentStatus ?? !(node.isCheck ?? false);
+  void onSelectParentNode(TreeNode node) {
+    bool parentStatus = node.isCheck ?? false;
+    parentStatus = !parentStatus;
 
-    if (node.children.isNotEmpty) {
+    void updateChildrenStatusByParent(TreeNode node, bool parentStatus) {
+      node.isCheck = parentStatus;
       for (final child in node.children) {
-        onSelectParentNode(child, parentStatus: node.isCheck);
+        updateChildrenStatusByParent(child, parentStatus);
       }
     }
+
+    updateChildrenStatusByParent(node, parentStatus);
 
     if (node.parent != null) {
       onSelectNodeChildren(node.parent!);
@@ -147,16 +141,17 @@ class TreeViewCubit extends Cubit<TreeViewState> {
     emit(state.copyWith(rootNodes: state.rootNodes));
   }
 
-  void toggleNode(TreeNode node) {
-    final status = node.decoration.status = !node.decoration.status;
+  void collapseExpandNode(TreeNode node) {
+    final status =
+        node.treeConfiguration.isExpanded = !node.treeConfiguration.isExpanded;
     findChildren(node, status);
     emit(state.copyWith(rootNodes: state.rootNodes));
   }
 
   void findChildren(TreeNode node, bool status) {
     for (final child in node.children) {
-      child.decoration.isShowChild = status;
-      child.decoration.status = status;
+      child.treeConfiguration.isShowChild = status;
+      child.treeConfiguration.isExpanded = status;
       findChildren(child, status);
     }
   }

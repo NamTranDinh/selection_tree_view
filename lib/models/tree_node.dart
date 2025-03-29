@@ -1,4 +1,4 @@
-import 'package:selection_tree_view/models/tree_decoration.dart';
+import 'package:selection_tree_view/models/tree_configuration.dart';
 
 class TreeNode {
   TreeNode({
@@ -7,7 +7,7 @@ class TreeNode {
     this.isCheck = false,
     this.hierarchy = 0,
     this.parent,
-    required this.children,
+    this.children = const [],
   });
 
   String? title;
@@ -16,7 +16,7 @@ class TreeNode {
   int hierarchy;
   TreeNode? parent;
   List<TreeNode> children;
-  TreeDecoration decoration = TreeDecoration();
+  TreeConfiguration treeConfiguration = TreeConfiguration();
 
   TreeNode copyWith({
     String? title,
@@ -36,6 +36,17 @@ class TreeNode {
     );
   }
 
+  TreeNode.fromJson(dynamic json)
+      : title = json['title'],
+        code = json['code'],
+        isCheck = json['isCheck'] ?? false,
+        hierarchy = json['hierarchy'] ?? 0,
+        parent =
+            json['parent'] != null ? TreeNode.fromJson(json['parent']) : null,
+        children = (json['children'] as List<dynamic>)
+            .map((child) => TreeNode.fromJson(child))
+            .toList();
+
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -44,7 +55,6 @@ class TreeNode {
       'hierarchy': hierarchy,
       'parent': parent?.title,
       'children': children.map((child) => child.toJson()).toList(),
-      // 'decoration': decoration.toJson(),
     };
   }
 }
