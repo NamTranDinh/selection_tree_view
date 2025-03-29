@@ -1,5 +1,5 @@
 name: selection_tree_view
-description: "Tree View"
+description: "A Flutter package providing a customizable and interactive tree view with selection capabilities."
 version: 1.0.2
 repository: https://github.com/NamTranDinh/selection_tree_view
 
@@ -19,6 +19,5 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
 
-flutter:
 
 
