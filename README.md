@@ -9,8 +9,8 @@ A Flutter package providing a customizable and interactive tree view with select
 
 ## Screenshots
 
-![](lib/screenshots/example_web.gif)
-![](lib/screenshots/example_mobile.gif)
+![](https://github.com/NamTranDinh/selection_tree_view/blob/main/lib/screenshots/example_mobile.gif)
+![](https://github.com/NamTranDinh/selection_tree_view/blob/main/lib/screenshots/example_web.gif)
 
 ## Features
 
